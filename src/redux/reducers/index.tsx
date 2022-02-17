@@ -1,11 +1,6 @@
-import user from './user/UserReducer';
-import profile from './profile/ProfileReducer';
-import gallery from './gallery/GalleryReducer';
-
+import user from "./user/UserReducer";
 const reducers = {
   user,
-  profile,
-  gallery
 };
 
 export default reducers;

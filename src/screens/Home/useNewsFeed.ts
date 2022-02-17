@@ -1,76 +1,46 @@
 /**
  * @format
  */
-import {useCallback} from 'react';
-import {useInfiniteQuery} from 'react-query';
-import {INewsFeedData} from './types/NewsFeedInterface';
-import client from '../../utils/ApiClient';
-import {config} from '../../config';
-import {QueryKeys} from '../../utils/QueryKeys';
-import {IGroupMemberPage} from '../Groups/Queries/useMembersList';
+import { useCallback } from "react";
+import { useInfiniteQuery } from "react-query";
 
-export interface INewsFeedResponseData {
-  data: INewsFeedData[];
-  error: boolean;
-  isFromCache: boolean;
-  message: string;
-  pageNo: number;
+import client from "../../utils/ApiClient";
+import { config } from "../../config";
+import { QueryKeys } from "../../utils/QueryKeys";
+import { IFeedData } from "./types/FeedInterface";
+
+export interface IFeedResponseData {
   status: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [Key: string]: any;
+  data: IFeedData[];
 }
 
-export interface IFeedPage {
-  data: INewsFeedData[];
-  pageNo: number;
-  hasNext: boolean;
-}
-export interface IFeedPages {
-  pages: IFeedPage[];
-  pageParams?: number[];
-}
-
-export interface IGroupMemberPages {
-  pages: IGroupMemberPage[];
-}
-async function fetchFeeds(pageNumber: number): Promise<IFeedPage | undefined> {
+async function fetchFeeds(): Promise<IFeedData[] | undefined> {
   try {
-    const url = `${config.NEWSFEED_API_URL}page/${pageNumber}`;
-    const response: INewsFeedResponseData = await client.get(url);
-    if (response.data.length > 0 && !response.error) {
-      return {data: response.data, pageNo: pageNumber, hasNext: true};
+    const url = `${config.LIST_API_URL}`;
+    const response: IFeedResponseData = await client.get(url);
+
+    // console.log("data", JSON.stringify(response));
+    if (response.data.length > 0) {
+      return response.data as IFeedData[];
     }
-    return {data: [], pageNo: pageNumber, hasNext: false};
+    return [];
   } catch (error) {
-    return {data: [], pageNo: pageNumber, hasNext: false};
+    return [];
   }
 }
 
 const useNewsFeed = () => {
-  const listQuery = useInfiniteQuery(
-    QueryKeys.homeFeed,
-    ({pageParam = 1}) => fetchFeeds(pageParam),
-    {
-      getNextPageParam: lastPage => {
-        return lastPage?.hasNext ? lastPage.pageNo + 1 : null;
-      },
-    },
-  );
+  const listQuery = useInfiniteQuery(QueryKeys.homeFeed, () => fetchFeeds());
 
-  const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = listQuery;
+  const { data } = listQuery;
 
-  const feedList: INewsFeedData[] = [];
-
-  const onEndReached = useCallback(() => {
-    if (!isFetchingNextPage && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  const feedList: IFeedData[] = [];
 
   if (data) {
-    data.pages.forEach(page => {
-      if (page?.data) {
-        feedList.push(...page.data);
+    data.pages[0]?.forEach((page) => {
+      console.log("page.data---->", page);
+      if (page) {
+        feedList.push(page);
       }
     });
   }
@@ -78,8 +48,7 @@ const useNewsFeed = () => {
   return {
     ...listQuery,
     feedList,
-    onEndReached,
   };
 };
 
-export {useNewsFeed};
+export { useNewsFeed };

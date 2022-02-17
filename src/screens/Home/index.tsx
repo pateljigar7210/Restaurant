@@ -1,38 +1,30 @@
 /**
  * @format
  */
-import React, {useCallback} from 'react';
-import {useScrollToTop, useNavigation} from '@react-navigation/native';
+import React, { useCallback } from "react";
+import { useScrollToTop, useNavigation } from "@react-navigation/native";
 
-import {Spinner} from 'native-base';
-import {FlatList, ListRenderItem} from 'react-native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {RootStackParamList} from '../../navigation';
-import {INewsFeedData} from './types/NewsFeedInterface';
-import NewsFeedLayout from './NewsFeed/NewsFeedLayout';
-import {useNewsFeed} from './useNewsFeed';
-import {DrawerParamList} from '../../navigation/DrawerMenu';
+import { Spinner } from "native-base";
+import { FlatList, ListRenderItem } from "react-native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RootNavigationType = NativeStackNavigationProp<RootStackParamList, any>;
-export type DrawerNavigationType = DrawerNavigationProp<DrawerParamList, any>;
+import { RootStackParamList } from "../../navigation";
+import { IFeedData } from "./types/FeedInterface";
+import FeedLayout from "./FeedLayout";
+import { useNewsFeed } from "./useNewsFeed";
 
 function Home() {
-  const navigation = useNavigation<RootNavigationType>();
-
   const ref = React.useRef(null);
   useScrollToTop(ref);
 
-  const {feedList, isLoading, refetch, isFetchingNextPage, onEndReached} = useNewsFeed();
+  const { feedList, isLoading, refetch, isFetchingNextPage } =
+    useNewsFeed();
 
-  const renderItem: ListRenderItem<INewsFeedData> = ({item}) => (
-    <NewsFeedLayout key={item.documentId} newsFeed={item} navigation={navigation} from="home" isMember  />
-  );
+  const renderItem: ListRenderItem<IFeedData> = ({ item }) => <FeedLayout feed={item}/>;
 
   const keyExtractor = useCallback(
-    (item: INewsFeedData, index: number) => `key-${index}-${item.documentId}`,
-    [],
+    (item: IFeedData, index: number) => `key-${index}-${item.id}`,
+    []
   );
 
   return (
@@ -46,9 +38,11 @@ function Home() {
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       onEndReachedThreshold={0.5}
-      onEndReached={onEndReached}
+      // onEndReached={onEndReached}
       ListHeaderComponent={isLoading ? <Spinner mt={20} mb={20} /> : null}
-      ListFooterComponent={isFetchingNextPage ? <Spinner mt={20} mb={20} /> : null}
+      ListFooterComponent={
+        isFetchingNextPage ? <Spinner mt={20} mb={20} /> : null
+      }
     />
   );
 }

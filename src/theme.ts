@@ -2,55 +2,9 @@ import {extendTheme} from 'native-base';
 import {DefaultTheme} from '@react-navigation/native';
 
 export const theme = extendTheme({
-  fontConfig: {
-    DMSans: {
-      100: {
-        normal: 'DMSans-Regular',
-        italic: 'DMSans-Italic',
-      },
-      200: {
-        normal: 'DMSans-Regular',
-        italic: 'DMSans-Italic',
-      },
-      300: {
-        normal: 'DMSans-Regular',
-        italic: 'DMSans-Italic',
-      },
-      400: {
-        normal: 'DMSans-Regular',
-        italic: 'DMSans-Italic',
-      },
-      500: {
-        normal: 'DMSans-Medium',
-        italic: 'DMSans-MediumItalic',
-      },
-      600: {
-        normal: 'DMSans-Medium',
-        italic: 'DMSans-MediumItalic',
-      },
-      700: {
-        normal: 'DMSans-Bold',
-        italic: 'DMSans-BoldItalic',
-      },
-      800: {
-        normal: 'DMSans-Bold',
-        italic: 'DMSans-BoldItalic',
-      },
-      900: {
-        normal: 'DMSans-Bold',
-        italic: 'DMSans-BoldItalic',
-      },
-    },
-  },
-  // Make sure values below matches any of the keys in `fontConfig`
-  fonts: {
-    heading: 'DMSans',
-    body: 'DMSans',
-    mono: 'DMSans',
-  },
   colors: {
     primary: {
-      50: '#d9f7ff',
+      50: '#27dd93',
       100: '#ace1ff',
       200: '#7cccff',
       300: '#49b7ff',

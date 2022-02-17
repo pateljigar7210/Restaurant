@@ -1,115 +1,69 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React, { useEffect } from "react";
+import { StatusBar, LogBox, Text, TextInput, Platform } from "react-native";
+import { NativeBaseProvider } from "native-base";
+import { Provider as StoreProvider } from "react-redux";
+import {QueryClient, QueryClientProvider} from 'react-query';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { PersistGate } from "redux-persist/integration/react";
+import KeyboardManager from "react-native-keyboard-manager";
+import NavContainer from "./src/navigation";
+import { theme } from "./src/theme";
+import { ConfirmModalProvider } from "./src/components/CofirmationModel";
+import { persistor, store } from "./src/redux/store";
 
-import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+// NOTE: hiding warnings about color contrasts
+LogBox.ignoreLogs(["NativeBase: The contrast ratio of"]);
+const queryClient = new QueryClient();
+interface TextWithDefaultProps extends Text {
+  defaultProps?: { allowFontScaling?: boolean };
+}
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+interface TextInputWithDefaultProps extends TextInput {
+  defaultProps?: { allowFontScaling?: boolean };
+}
 
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+function App(): JSX.Element {
+  useEffect(() => {
+    disableScaling();
+    if (Platform.OS === "ios") {
+      KeyboardManager.setEnable(true);
+      KeyboardManager.setEnableAutoToolbar(false);
+    }
+  }, []);
 
-const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const disableScaling = () => {
+    (Text as unknown as TextWithDefaultProps).defaultProps =
+      (Text as unknown as TextWithDefaultProps).defaultProps || {};
+    (Text as unknown as TextWithDefaultProps).defaultProps!.allowFontScaling =
+      false;
+    (TextInput as unknown as TextInputWithDefaultProps).defaultProps =
+      (TextInput as unknown as TextInputWithDefaultProps).defaultProps || {};
+    (
+      TextInput as unknown as TextInputWithDefaultProps
+    ).defaultProps!.allowFontScaling = false;
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <StoreProvider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar barStyle="dark-content" />
+        <SafeAreaProvider>
+          <NativeBaseProvider theme={theme}>
+            <ConfirmModalProvider>
+              <StatusBar
+                translucent
+                backgroundColor={theme.colors.primary[50]}
+              />
+              <NavContainer />
+            </ConfirmModalProvider>
+          </NativeBaseProvider>
+        </SafeAreaProvider>
+        </QueryClientProvider>
+      </PersistGate>
+    </StoreProvider>
   );
-};
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+}
 
 export default App;

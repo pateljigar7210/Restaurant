@@ -1,11 +1,10 @@
-import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
-import thunk from 'redux-thunk';
-import promise from 'redux-promise-middleware';
-import {persistStore, persistReducer} from 'redux-persist';
-import AsyncStorage from '@react-native-community/async-storage';
-import reducer from './reducers';
-import Reactotron from '../../ReactotronConfig';
-import {UserTypes} from './reducers/user/UserTypes';
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import thunk from "redux-thunk";
+import promise from "redux-promise-middleware";
+import { persistStore, persistReducer } from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import reducer from "./reducers";
+import { UserTypes } from "./reducers/user/UserTypes";
 
 const appReducer = combineReducers(reducer);
 
@@ -24,21 +23,17 @@ const rootReducer = (state: any, action: any) => {
 };
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage: AsyncStorage,
-  whitelist: ['user'],
+  whitelist: ["user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const reactotronEnhancer = Reactotron.createEnhancer
-  ? Reactotron.createEnhancer()
-  : () => undefined;
-
-const store = createStore(persistedReducer, compose(middleware, reactotronEnhancer));
+const store = createStore(persistedReducer, compose(middleware));
 
 const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-export {store, persistor};
+export { store, persistor };

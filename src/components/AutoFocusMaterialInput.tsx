@@ -6,7 +6,7 @@ import {TextInput, View} from 'react-native';
 import {useField} from 'formik';
 
 import {FloatingInputProps} from './FloatingInput';
-import MaterialInput from './MaterialInput';
+
 
 interface MaterialInputProps extends Omit<FloatingInputProps, 'error'> {
   name: string;
@@ -32,15 +32,7 @@ const AutoFocusMaterialInput = React.forwardRef<TextInput, MaterialInputProps>(
 
     return (
       <View ref={viewRef}>
-        <MaterialInput
-          ref={ref}
-          onLayout={onLayout}
-          value={value}
-          onChangeText={setValue}
-          error={touched ? error : ''}
-          onBlur={onBlur(name)}
-          {...props}
-        />
+
       </View>
     );
   },

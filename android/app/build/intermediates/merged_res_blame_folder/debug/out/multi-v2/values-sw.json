@@ -4,7 +4,7 @@
             "outputFile": "/Users/jigarpatel/Documents/React/Test/Restaurant/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-sw/values-sw.xml",
             "map": [
                 {
-                    "source": "/Users/jigarpatel/.gradle/caches/transforms-3/540dbfb90b248d7b59cd154497c15f99/transformed/core-1.5.0/res/values-sw/values-sw.xml",
+                    "source": "/Users/jigarpatel/.gradle/caches/transforms-3/9f18c6b50baa776d71894ad120630276/transformed/core-1.6.0/res/values-sw/values-sw.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
