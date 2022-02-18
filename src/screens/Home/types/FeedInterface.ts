@@ -17,8 +17,8 @@ export interface IFeedData {
 }
 
 export interface img {
-  id: 13;
-  main_id: 1;
+  id: number;
+  main_id: number;
   image: string | "";
   created_at: null;
   updated_at: null;

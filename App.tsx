@@ -7,6 +7,7 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { PersistGate } from "redux-persist/integration/react";
 import KeyboardManager from "react-native-keyboard-manager";
+import FlashMessage from 'react-native-flash-message';
 import NavContainer from "./src/navigation";
 import { theme } from "./src/theme";
 import { ConfirmModalProvider } from "./src/components/CofirmationModel";
@@ -62,6 +63,7 @@ function App(): JSX.Element {
         </SafeAreaProvider>
         </QueryClientProvider>
       </PersistGate>
+      <FlashMessage position="top" statusBarHeight={StatusBar.currentHeight} />
     </StoreProvider>
   );
 }

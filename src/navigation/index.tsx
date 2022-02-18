@@ -1,12 +1,9 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
 import Login from "../screens/Auth/Login";
-
 import { navTheme } from "../theme";
 import HomeTabs from "./HomeTabs";
-
 import useUserInfo from "../hooks/useUserInfo";
 import { navigationRef } from "./navigationRef";
 
@@ -20,7 +17,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function NavContainer() {
   const { isLoggedIn } = useUserInfo();
   return (
-    <NavigationContainer theme={navTheme} independent ref={navigationRef} >
+    <NavigationContainer theme={navTheme} independent ref={navigationRef}>
       <Stack.Navigator>
         {!isLoggedIn ? (
           <Stack.Group screenOptions={{ headerShown: false }}>

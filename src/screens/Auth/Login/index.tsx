@@ -1,11 +1,9 @@
 import React, { useRef } from "react";
-import { Text, Button, View } from "native-base";
+import { Button, View } from "native-base";
 import {
   StyleSheet,
-  TouchableOpacity,
   Platform,
-  TextInput,
-  ImageBackground,
+  TextInput
 } from "react-native";
 import * as Yup from "yup";
 import { FormikProps, useFormik } from "formik";
@@ -14,15 +12,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useDispatch } from "react-redux";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-// import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
-
-// import AuthHeader from '../Components/AuthHeader';
 import { RootStackParamList } from "../../../navigation";
-import { userLogin } from "../../../redux/reducers/user/UserServices";
 import FloatingInput from "../../../components/FloatingInput";
 import { theme } from "../../../theme";
 import useUserInfo from "../../../hooks/useUserInfo";
 import { UserTypes } from "../../../redux/reducers/user/UserTypes";
+import { showSnackbar } from "../../../utils/SnackBar";
 
 interface MyFormValues {
   Username: string;
@@ -36,9 +31,10 @@ const schema = Yup.object().shape({
   ),
 });
 
-type Props = NativeStackScreenProps<RootStackParamList, "Login">;
+const staticUserName = "jigar";
+const staticPassWord = "Jigar#1122";
 
-function Login(props: Props) {
+function Login() {
   const dispatch = useDispatch();
   const { isLoggedIn } = useUserInfo();
 
@@ -50,13 +46,23 @@ function Login(props: Props) {
   const onSubmit = React.useCallback(
     async (values: MyFormValues) => {
       try {
-        const Username = values.Username?.toLowerCase();
+        const Username = values.Username?.trim().toLowerCase();
+        // get form value when api hit
         // const newValues: MyFormValues = {...values, Username};
+        if (staticUserName.trim().toLowerCase() !== Username) {
+          showSnackbar({ message: "wrong user name", type: "danger" });
+          return;
+        }
+        if (values.password !== staticPassWord) {
+          showSnackbar({ message: "wrong password", type: "danger" });
+          return;
+        }
+        showSnackbar({ message: "user login successfuly", type: "success" });
         const data = {
           username: Username,
           password: values.password,
         };
-
+        // pass data to api response store to redux
         // await dispatch(userLogin(data));
         await dispatch({
           type: UserTypes.LOGIN,
@@ -70,7 +76,7 @@ function Login(props: Props) {
 
   const focusPassword = () => passwordRef.current?.focus();
 
-  const initialValues = { Username: "jigar", password: "Jigar@7210" };
+  const initialValues = { Username: "", password: "" };
 
   const formik: FormikProps<MyFormValues> = useFormik<MyFormValues>({
     initialValues,
@@ -104,9 +110,7 @@ function Login(props: Props) {
   const { handleChange, handleSubmit, values, errors, resetForm } = formik;
 
   React.useEffect(() => {
-    console.log("isLoggedIn :", isLoggedIn);
     if (username) {
-      console.log("username", username);
       resetForm();
     }
   }, [username, isLoggedIn, dispatch, resetForm]);
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
   },
   safeAreaView: {
     flexGrow: 1,
-    backgroundColor: theme.colors.transparentGray[100],
+    backgroundColor: theme.colors.black[600],
   },
   container: {
     flexGrow: 1,
@@ -224,6 +228,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     borderRadius: 40,
     height: 45,
+    backgroundColor:theme.colors.green[600]
   },
   registerTextStyle: {
     flexDirection: "row",

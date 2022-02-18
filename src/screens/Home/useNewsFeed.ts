@@ -1,9 +1,7 @@
 /**
  * @format
  */
-import { useCallback } from "react";
 import { useInfiniteQuery } from "react-query";
-
 import client from "../../utils/ApiClient";
 import { config } from "../../config";
 import { QueryKeys } from "../../utils/QueryKeys";
@@ -18,8 +16,6 @@ async function fetchFeeds(): Promise<IFeedData[] | undefined> {
   try {
     const url = `${config.LIST_API_URL}`;
     const response: IFeedResponseData = await client.get(url);
-
-    // console.log("data", JSON.stringify(response));
     if (response.data.length > 0) {
       return response.data as IFeedData[];
     }
@@ -38,7 +34,6 @@ const useNewsFeed = () => {
 
   if (data) {
     data.pages[0]?.forEach((page) => {
-      console.log("page.data---->", page);
       if (page) {
         feedList.push(page);
       }

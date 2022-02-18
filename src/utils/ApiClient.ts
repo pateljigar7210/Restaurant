@@ -12,11 +12,14 @@ const AUTH_ROUTES = ['login', 'register', 'check-username'];
 client.interceptors.request.use(
   (request: any) => {
     const authRoutes = AUTH_ROUTES.some(i => request.url.includes(i));
-    const {token} = store.getState().user
-    if (!authRoutes) {
-      // TODO: add token to secure request
-      request.headers.Authorization = `${token}`;
-    }
+
+    // set header token here
+
+    // const {token} = store.getState().user
+    // if (!authRoutes) {
+    //   // TODO: add token to secure request
+    //   request.headers.Authorization = `${token}`;
+    // }
     return request;
   },
   (error: any) => {

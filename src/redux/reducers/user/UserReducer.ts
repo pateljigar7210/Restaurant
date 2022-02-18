@@ -27,6 +27,7 @@ const userReducer = (
         ...state,
         username: "",
         password: "",
+        isLoggedIn: false,
       };
     default:
       return state;

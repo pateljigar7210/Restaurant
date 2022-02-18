@@ -1,9 +1,9 @@
 /**
  * @format
  */
-import {useQueryClient} from 'react-query';
-import {useDispatch} from 'react-redux';
-import {userLogout} from './UserActions';
+import { useQueryClient } from "react-query";
+import { useDispatch } from "react-redux";
+import { userLogout } from "./UserActions";
 
 export const useUserLogout = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,6 @@ export const useUserLogout = () => {
     queryClient.cancelQueries();
     queryClient.clear();
   };
-
   return {
     logoutUser,
   };
