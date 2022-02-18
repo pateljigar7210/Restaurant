@@ -26,16 +26,6 @@ interface locationData {
   speed: number;
 }
 
-const defultLatLong = {
-  accuracy: 5,
-  altitude: 5,
-  altitudeAccuracy: 0.5,
-  heading: 0,
-  latitude: 20.6509,
-  longitude: 73.0464,
-  speed: 0,
-};
-
 let { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 5; //map zoom level
@@ -43,8 +33,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 function Map(props: any) {
   const { route } = props;
-  const [curuntLatLong, setCurrentLatLong] =
-    useState<locationData>(defultLatLong);
+  const [curuntLatLong, setCurrentLatLong] = useState<locationData>();
   const [desinationLatLong, setDesinationLatLong] = useState<any>();
 
   useEffect(() => {
@@ -55,9 +44,6 @@ function Map(props: any) {
       };
       setDesinationLatLong(data);
     }
-  }, [route.params]);
-
-  useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === "ios") {
       } else {
@@ -78,7 +64,7 @@ function Map(props: any) {
       requestLocationPermission();
       setDesinationLatLong(null);
     };
-  }, []);
+  }, [route.params]);
 
   const getLocation = () => {
     Geolocation.getCurrentPosition(
@@ -99,13 +85,13 @@ function Map(props: any) {
         style={styles.map}
         provider={"google"}
         initialRegion={{
-          latitude: curuntLatLong.latitude,
-          longitude: curuntLatLong.longitude,
+          latitude: curuntLatLong?.latitude || 20.6509,
+          longitude: curuntLatLong?.longitude || 73.0464,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         }}
       >
-        {desinationLatLong && (
+        {desinationLatLong && curuntLatLong && (
           <MapViewDirections
             origin={{
               latitude: curuntLatLong.latitude,
@@ -117,17 +103,18 @@ function Map(props: any) {
             strokeColor={theme.colors.primary[200]}
           />
         )}
-
-        <Marker
-          coordinate={curuntLatLong}
-          description={"This is a marker in React Natve"}
-        >
-          <MaterialIcons
-            name="location-on"
-            color={theme.colors.primary[100]}
-            size={35}
-          />
-        </Marker>
+        {curuntLatLong && (
+          <Marker
+            coordinate={curuntLatLong}
+            description={"This is a marker in React Natve"}
+          >
+            <MaterialIcons
+              name="location-on"
+              color={theme.colors.primary[100]}
+              size={35}
+            />
+          </Marker>
+        )}
 
         {desinationLatLong && (
           <Marker
