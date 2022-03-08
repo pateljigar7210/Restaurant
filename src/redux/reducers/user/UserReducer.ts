@@ -12,7 +12,6 @@ const userReducer = (
   state: IUserState = initialState,
   action: IUserActions
 ) => {
-  console.log("action", action);
   switch (action.type) {
     case UserTypes.LOGIN:
       return {
